@@ -3,7 +3,6 @@
 const express = require("express");
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser'); 
-const landingpage = require('./index');
 let cors = require('cors');
 
 const api = express.Router();
