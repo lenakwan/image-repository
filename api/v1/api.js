@@ -13,6 +13,6 @@ api.use(bodyParser.urlencoded({ extended: false }))
 api.use(bodyParser.json()) 
 api.use(cors());
 
-api.post('/', landingpage.landingResponse);
+api.get('/', landingpage.landingResponse);
 
 module.exports= api;
