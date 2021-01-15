@@ -8,7 +8,7 @@ addValidItem = async (req, res) => {
     } else {
         let body = req.body;
         itemModel.addItem(body.item_name, body.image_text, body.item_category, body.quantity, body.private, body.price, body.discount, user_id).then( (data) => {
-            res.status(200).json(data.rows);
+            res.status(200).json('New Entry Created for' + body.item_name);
         }).
         catch(e => res.status(500).json({message:e.message}));
     }
@@ -16,7 +16,7 @@ addValidItem = async (req, res) => {
 
 
 getAllPublicItems = async (req, res) => {
-    let data = itemModel.getPublicItems()
+    let data = await itemModel.getPublicItems();
     data.then(([data,meta]) => {
         res.status(200).json(data);
     }).
