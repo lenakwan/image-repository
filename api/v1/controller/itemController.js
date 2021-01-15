@@ -16,8 +16,7 @@ addValidItem = async (req, res) => {
 
 
 getAllPublicItems = async (req, res) => {
-    let data = await itemModel.getPublicItems();
-    data.then(([data,meta]) => {
+    let data = await itemModel.getPublicItems().then(([data,meta]) => {
         res.status(200).json(data);
     }).
     catch(e => res.status(500).json({message:e.message}));
