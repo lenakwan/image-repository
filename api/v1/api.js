@@ -22,11 +22,6 @@ api.get('/', (req, res) => res
         message: 'Hello, this is the API that I made for the shopify Summer 2021 Intern Challenge! If you need help with using this API please contact me at lenakwan@gmail.com'
     }));
 
-api.get('*', (req, res) => res
-    .send({
-        message: 'Hello, this is the API that I made for the shopify Summer 2021 Intern Challenge! If you need help with using this API please contact me at lenakwan@gmail.com'
-    }));
-
 api.post('/image', itemController.addValidItem);
 
 api.get('/item', itemController.getAllPublicItems);
