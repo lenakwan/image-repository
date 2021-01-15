@@ -7,22 +7,20 @@ addValidItem = async (req,res)=>{
         res.status(402).json('Unauthorized User, login required.')
     }else{
         let body = req.body;
-        try{
-            itemModel.addItem(body.item_name, body.image_text, body.item_category, body.quantity, body.private, body.price, body.discount, body.user_id)
+            itemModel.addItem(body.item_name, body.image_text, body.item_category, body.quantity, body.private, body.price, body.discount, user_id)
             .then(res.json({
                 status:200,
                 success: true,
                 message: "New Item added to Database."
             }))
-        }
-        catch(e){
+        .catch(err=>{
             res.json({
                 status:404,
                 succes: false,
-                message: e
+                message: err
             })
             console.log(e);
-        }
+        })
     }
 }
 
