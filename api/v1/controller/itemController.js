@@ -7,36 +7,20 @@ addValidItem = async (req, res) => {
         res.status(402).json('Unauthorized User, login required.')
     } else {
         let body = req.body;
-        itemModel.addItem(body.item_name, body.image_text, body.item_category, body.quantity, body.private, body.price, body.discount, user_id).then(res.json({
-                status: 200,
-                success: true,
-                message: "New Item added to Database."
-            }))
-            .catch(err => {
-                res.json({
-                    status: 404,
-                    succes: false,
-                    message: err
-                });
-                console.log(err);
-            })
+        itemModel.addItem(body.item_name, body.image_text, body.item_category, body.quantity, body.private, body.price, body.discount, user_id).then( (data) => {
+            res.status(200).json(data.rows);
+        }).
+        catch(e => res.status(500).json({message:e.message}));
     }
 }
 
 
 getAllPublicItems = async (req, res) => {
-    itemModel.getPublicItems().then(res.json({
-        status: 200,
-        success: true,
-        message: "New Item added to Database."
-    }))
-    .catch(err => {
-        res.json({
-            status: 404,
-            succes: false,
-            message: err
-        });
-    })
+    let data = itemModel.getPublicItems()
+    data.then(([data,meta]) => {
+        res.status(200).json(data);
+    }).
+    catch(e => res.status(500).json({message:e.message}));
 }
 
 module.exports = {
