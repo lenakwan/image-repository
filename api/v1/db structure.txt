@@ -1,0 +1,51 @@
+quick notes on what I want to do for the database
+
+1. assumption is that this is a store
+2. assumption that users have to logon to access store
+
+need
+User Object
+- username
+- userID <- auto increment?
+- userpw
+- admin boolean
+
+
+item
+-name - string
+-category - string
+-quantity -int
+-price - int
+-discount -int
+-private -boolean
+-userID
+-imgid
+-list_date - date
+-sold_date - date
+
+CREATE TABLE users(
+    user_name varchar(40) NOT NULL,
+    user_pw varchar(40) NOT NULL,
+    user_id SERIAL PRIMARY KEY,
+    admin boolean
+);
+CREATE TABLE items (
+    item_name varchar(40) NOT NULL,
+    image TEXT NOT NULL,
+    item_category varchar(40) NOT NULL,
+    list_date date NOT NULL,
+    quantity INT,
+    private boolean,
+    price NUMERIC,
+    discount INT,
+    img_id SERIAL PRIMARY KEY,
+    fk_user_id integer
+);
+
+initial user:
+INSERT INTO users (user_name, user_pw, user_id, admin) VALUES ('test', 'test123', nextval('users_user_id_seq'), false);
+initial admin:
+INSERT INTO users (user_name, user_pw, user_id, admin) VALUES ('admin', 'admin123', nextval('users_user_id_seq'), true);
+
+initial item:
+INSERT INTO items (item_name, item_category, list_date, quantity, private, price, discount, img_id, fk_user_id) VALUES('potato', 'vegetable', current_timestamp, 5, false, 1.99, 10, nextval('items_img_id_seq'), 1)

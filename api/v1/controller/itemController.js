@@ -1,0 +1,31 @@
+const itemModel = require('../model/itemModel');
+
+// Add item to database, body requires item_name, image_text, item_category, quantity, private, price, discount, user_id
+addValidItem = async (req,res)=>{
+    let user_id = 1; //hardcoding user before I implement login
+    if(!user_id){
+        res.status(402).json('Unauthorized User, login required.')
+    }else{
+        let body = req.body;
+        try{
+            itemModel.addItem(body.item_name, body.image_text, body.item_category, body.quantity, body.private, body.price, body.discount, body.user_id)
+            .then(res.json({
+                status:200,
+                success: true,
+                message: "New Item added to Database."
+            }))
+        }
+        catch(e){
+            res.json({
+                status:404,
+                succes: false,
+                message: e
+            })
+            console.log(e);
+        }
+    }
+}
+
+module.exports = {
+    addValidItem : addValidItem
+}
