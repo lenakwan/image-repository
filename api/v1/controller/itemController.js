@@ -16,11 +16,12 @@ addValidItem = async (req, res) => {
 
 
 getAllPublicItems = async (req, res) => {
-    let data = await itemModel.getPublicItems().then(([data,meta]) => {
-        res.status(200).json(data);
+    itemModel.getPublicItems().then( (data) => {
+        res.status(200).json(data.rows);
     }).
     catch(e => res.status(500).json({message:e.message}));
 }
+
 
 module.exports = {
     addValidItem: addValidItem,
