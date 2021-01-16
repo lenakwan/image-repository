@@ -26,11 +26,11 @@ api.post('/item', itemController.addValidItem);
 
 api.get('/items', itemController.validPublicItems);
 
-api.get('/items:user_id', itemController.validUserItems);
+api.get('/items/:user_id', itemController.validUserItems);
 
 api.put('/items', itemController.editValidItem);
 
-api.delete('/items:user_id', itemController.validDeleteAll);
+api.delete('/items/:user_id', itemController.validDeleteAll);
 
 api.delete('/items', itemController.validDeleteSpecific);
 
