@@ -37,6 +37,6 @@ api.delete('/items', itemController.validDeleteSpecific);
 
 api.get('/login', userController.loginUser);
 
-api.put('/register', userController.registerUser);
+api.post('/register', userController.registerUser);
 
 module.exports = api;
