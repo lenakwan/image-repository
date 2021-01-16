@@ -3,7 +3,7 @@ const userModel = require('../model/userModel');
 registerUser = async (req, res) => {
     let body = req.body;
     userModel.findUser(body.username).then((users) => {
-        if (users.rowCount == 1) {
+        if (users.rowCount == 0) {
             userModel.createUser(body.username, body.password)
                 .catch(e => res.status(500).json({
                     message: 'Internal Server Error' + e.message
