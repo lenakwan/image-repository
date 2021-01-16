@@ -1,9 +1,9 @@
 const db = require('../database');
 
-findUser = async (username, password) => {
+authUser = async (username, password) => {
     return await db.pool.query(`Select * from users where user_name='${username}' and password='${password}'`);
 }
-getUserId = async (username) => {
+findUser = async (username) => {
     return db.pool.query("Select user_id from users where user_name ='" + username + "'");
 }
 createUser = async (username, password) => {
@@ -12,7 +12,7 @@ createUser = async (username, password) => {
 
 
 module.exports = {
+    authUser: authUser,
     findUser: findUser,
-    getUserId: getUserId,
     createUser: createUser
 }

@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 let cors = require('cors');
 let itemController = require('./controller/itemController');
+let userController = require('./controller/userController');
 
 const api = express.Router();
 
@@ -33,5 +34,9 @@ api.put('/items', itemController.editValidItem);
 api.delete('/items/:user_id', itemController.validDeleteAll);
 
 api.delete('/items', itemController.validDeleteSpecific);
+
+api.get('/login', userController.loginUser);
+
+api.put('/register', userController.registerUser);
 
 module.exports = api;

@@ -9,6 +9,7 @@ User Object
 - userID <- auto increment?
 - userpw
 - admin boolean
+- authtoken <- added later on, ALTER TABLE users ADD authtoken(varchar255)
 
 
 item
@@ -21,7 +22,7 @@ item
 -userID
 -imgid
 -list_date - date
--sold_date - date
+-image <- convert images to DATA URI and then store the image. 
 
 CREATE TABLE users(
     user_name varchar(40) NOT NULL,
@@ -48,7 +49,7 @@ initial admin:
 INSERT INTO users (user_name, user_pw, user_id, admin) VALUES ('admin', 'admin123', nextval('users_user_id_seq'), true);
 
 initial item:
-INSERT INTO items (item_name, item_category, list_date, quantity, private, price, discount, img_id, fk_user_id, image) VALUES('test', 'test', current_timestamp, 5, false, 1.99, 10, nextval('items_img_id_seq'), 1, 'testtext')
+INSERT INTO items (item_name, item_category, list_date, quantity, private, price, discount, img_id, fk_user_id, image) VALUES('test', 'test', current_timestamp, 5, false, 1.99, 10, nextval('items_img_id_seq'), 2, 'testtext')
 
 update item:
-UPDATE items SET item_name = test, image = "testchanged", item_category ="test_change", quantity = 200, private= true, price = 0, discount = 0 WHERE img_id = 2 and fk_user_id=1;
+UPDATE items SET item_name = test, image = 'testchanged', item_category ='test_change', quantity = 200, private= true, price = 0, discount = 0 WHERE img_id = 2 and fk_user_id=1;
