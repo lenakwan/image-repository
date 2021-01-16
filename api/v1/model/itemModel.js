@@ -35,7 +35,7 @@ deleteSpecificItem = (user_id, img_id) => {
 //string input must be '' for psql, "" does not work for psql
 updateItem = (user_id, image, img_id, quantity, discount, item_name, category, price, privacy) => {
     return db.pool.query({
-        text: "UPDATE items SET item_name = $1, image = $2, item_category = $3, quantity = $4, private= $5, price = $6, discount = $7 WHERE img_id = $7 AND fk_user_id = $8",
+        text: "UPDATE items SET item_name = $1, image = $2, item_category = $3, quantity = $4, private= $5, price = $6, discount = $7 WHERE img_id = $8 AND fk_user_id = $9",
         values: [item_name, image, category, quantity, privacy, price, discount, img_id, user_id]
     });
 }
