@@ -1,8 +1,8 @@
 const db = require('../database');
 
-addItem = async (item_name, image_text, item_category, quantity, private, price, discount, user_id) => {
+addItem = async (item_name, image, item_category, quantity, private, price, discount, user_id) => {
     return await db.pool.query(`INSERT INTO items (item_name, image, item_category, list_date, quantity, private
-        , price, discount, img_id, fk_user_id) VALUES('${item_name}', '${image_text}', '${item_category}', current_timestamp, '${quantity}'
+        , price, discount, img_id, fk_user_id) VALUES('${item_name}', '${image}', '${item_category}', current_timestamp, '${quantity}'
         , '${private}', '${price}', '${discount}', nextval('items_img_id_seq'), '${user_id}')`);
 }
 
