@@ -37,7 +37,6 @@ api.delete('/items', itemController.validDeleteSpecific);
 
 api.post('/login', userController.loginUser);
 
-//user identity tied to user_id, can have repeating usernames, need to somehow hide user_id for security
 api.post('/register', userController.registerUser);
 
 module.exports = api;
