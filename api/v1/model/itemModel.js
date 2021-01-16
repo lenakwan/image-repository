@@ -8,7 +8,7 @@ addItem = async (item_name, image_text, item_category, quantity, private, price,
 
 getUserItems = (user_id) => {
     return db.pool.query({
-        text: "Select image_text from items where fk_user_id = $1",
+        text: "Select * from items where fk_user_id = $1",
         values: [user_id]
     });
 }
