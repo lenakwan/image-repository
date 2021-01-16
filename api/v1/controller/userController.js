@@ -1,27 +1,33 @@
-const userModel=require('../model/userModel');
+const userModel = require('../model/userModel');
 
-registerUser = async (req,res) =>{
+registerUser = async (req, res) => {
     let body = req.body;
-    existingUser = await userModel.findUser(body.username);
-    if(existingUser.row == 0){
-        userModel.createUser(body.username, body.password);
-        res.status(200).json('New User Created');
-    }else{
-        res.status(409).json('Existing User Found');
-    }
+    userModel.findUser(body.username).then((existingUser) => {
+        if (existingUser.row == 0) {
+            userModel.createUser(body.username, body.password);
+            res.status(200).json('New User Created');
+        } else {
+            res.status(409).json('Existing User Found');
+        }
+    }).catch(err => {
+        res.status(500).json('err');
+    });
+
 }
 
-loginUser = async (req,res)=>{
+loginUser = async (req, res) => {
     let body = req.body;
-    existingUser = await userModel.authUser(body.username, body.password);
-    console.log(existingUser);
-    if (existingUser.row == 0){
-        res.status(404).json('Invalid Login');
-    }else{
-        res.status(200).json('User Logged In');
-    }
+    userModel.authUser(body.username, body.password).then((existingUser) => {
+        if (existingUser.row == 0) {
+            res.status(404).json('Invalid Login');
+        } else {
+            res.status(200).json('User Logged In');
+        }
+    }).catch(err => {
+        res.status(500).json('err');
+    });
 }
 module.exports = {
-    registerUser : registerUser,
-    loginUser : loginUser
+    registerUser: registerUser,
+    loginUser: loginUser
 }
