@@ -14,7 +14,8 @@ registerUser = async (req,res) =>{
 loginUser = async (req,res)=>{
     let body = req.body;
     existingUser = userModel.authUser(body.username, body.password);
-    if (!existingUser){
+    console.log(existingUser);
+    if (existingUser.row == 0){
         res.status(404).json('Invalid Login');
     }else{
         res.status(200).json('User Logged In');
