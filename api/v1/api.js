@@ -24,7 +24,7 @@ api.get('/', (req, res) => res
 
 api.post('/item', itemController.addValidItem);
 
-api.get('/items', itemController.getAllPublicItems);
+api.get('/items', itemController.validPublicItems);
 
 api.get('/items:user_id', itemController.validUserItems);
 
