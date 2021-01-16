@@ -3,7 +3,7 @@ const userModel=require('../model/userModel');
 registerUser = async (req,res) =>{
     let body = req.body;
     existingUser = userModel.findUser(body.username);
-    if(!existingUser){
+    if(existingUser.row == 0){
         userModel.createUser(body.username, body.password);
         res.status(200).json('New User Created');
     }else{

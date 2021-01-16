@@ -35,7 +35,7 @@ api.delete('/items/:user_id', itemController.validDeleteAll);
 
 api.delete('/items', itemController.validDeleteSpecific);
 
-api.get('/login', userController.loginUser);
+api.post('/login', userController.loginUser);
 
 api.post('/register', userController.registerUser);
 
