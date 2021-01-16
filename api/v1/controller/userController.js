@@ -2,17 +2,10 @@ const userModel = require('../model/userModel');
 
 registerUser = async (req, res) => {
     let body = req.body;
-    userModel.findUser(body.username).then((existingUser) => {
-        if (existingUser.row == 0) {
-            userModel.createUser(body.username, body.password);
-            res.status(200).json('New User Created');
-        } else {
-            res.status(409).json('Existing User Found');
-        }
-    }).catch(err => {
-        res.status(500).json('err');
-    });
-
+    userModel.createUser(body.username, body.password);
+    res.status(200).json('New User Created').catch(e => res.status(500).json({
+        message: e.message
+    }))
 }
 
 loginUser = async (req, res) => {
