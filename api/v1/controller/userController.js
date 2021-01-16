@@ -2,7 +2,7 @@ const userModel=require('../model/userModel');
 
 registerUser = async (req,res) =>{
     let body = req.body;
-    existingUser = userModel.findUser(body.username);
+    existingUser = await userModel.findUser(body.username);
     if(existingUser.row == 0){
         userModel.createUser(body.username, body.password);
         res.status(200).json('New User Created');
@@ -13,7 +13,7 @@ registerUser = async (req,res) =>{
 
 loginUser = async (req,res)=>{
     let body = req.body;
-    existingUser = userModel.authUser(body.username, body.password);
+    existingUser = await userModel.authUser(body.username, body.password);
     console.log(existingUser);
     if (existingUser.row == 0){
         res.status(404).json('Invalid Login');
