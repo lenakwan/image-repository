@@ -65,7 +65,7 @@ validDeleteSpecific = async (req, res) => {
 editValidItem = async (req, res) => {
     let user_id = 1; //hard code before implementing login
     let body = req.body;
-    itemModel.updateItem(user_id, body.image, body.img_id, body.quantity, body.discount, body.item_name, body.category, body.price, body.privacy).then((data) => {
+    itemModel.updateItem(user_id, body.image, body.img_id, body.quantity, body.discount, body.item_name, body.item_category, body.price, body.private).then((data) => {
         res.status(200).json('Item Edited from Database');
     }).catch(e => res.status(404).json({
         message: e.message
