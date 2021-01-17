@@ -121,6 +121,30 @@ Attributes
  
 
 ---
+# Web Application
+
+# Client Side
+
+## Introduction
+
+Hello you can access the deployed web application that I made for this challenge at [my website](https://lenakwan.ca/shopifyChallenge/)
+
+APIV1 is a REST API that allows API access via HTTP protocol at a predefined set of URLs. These URLs allow you, the developer, to access various resources which can have methods performed on them (GET/POST/PUT/DELETE). 
+
+---
+
+## Functionalities
+
+The website is an image repository, I made it into a shop to work on the sell/buy challenge.
+
+### Home / Marketboard
+
+The home page serves as a marketplace for all of the users. Rather than serve just one owner, I made it so that any images listed as not private can be published and sold on the home page. Like a flea market!
+
+### Manage Inventory
+
+Users can log into the manage inventory page in order to list new items/delete their items/edit items/make their private listings public
+---
 
 ## Contact Me
 
