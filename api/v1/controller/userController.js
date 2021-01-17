@@ -1,5 +1,10 @@
 const userModel = require('../model/userModel');
 
+/**
+ * Registers a user. Checks if the user exists in database first, then creates user.
+ *
+ * 
+ * */
 registerUser = async (req, res) => {
     let body = req.body;
     userModel.findUser(body.username).then((users) => {
@@ -16,7 +21,11 @@ registerUser = async (req, res) => {
 }
 
 
-
+/**
+ * Authenticates user credentials. Checks if the database retrieves user based on credentials.
+ *
+ * 
+ * */
 loginUser = async (req, res) => {
     let body = req.body;
     userModel.authUser(body.username, body.password).then((users)=>{

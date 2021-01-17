@@ -1,15 +1,30 @@
+/**
+ * If user is not logged in, it will redirect them back to index.html.
+ */
 const session = localStorage.getItem("session");
 if (!session) {
     console.log('invalid session');
     location.href = "./index.html";
 }
 
-
+/**
+ * Calculates the discounted price.
+ *@param {number} price item price
+ *@param {integer} discount discount ranges 0-100 
+ * 
+ * 
+ * */
 calculateDiscount = (price, discount) => {
     let discountedPrice = (1 - (discount / 100)) * price;
     return discountedPrice.toFixed(2);
 }
 
+/**
+ * Retrieves data for inventory management. 
+ * Items are retrieved based on user_id which is stored in the user session.
+ *
+ * 
+ * */
 getUserItems = () => {
     user_id = localStorage.getItem('session');
     fetch('https://shopify-challenge-db.herokuapp.com/v1/items/' + user_id, {
@@ -46,6 +61,11 @@ getUserItems = () => {
     });
 }
 
+/**
+ * Deletes a specific item from the user's listings.
+ *
+ * 
+ * */
 deleteItem = () => {
     fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
         method: 'DELETE',
@@ -78,7 +98,11 @@ deleteItem = () => {
     });
 }
 
-
+/**
+ * Deletes a specific item based on imgID and userID from the database.
+ *
+ * 
+ * */
 deleteCurrentItem = () => {
     fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
         method: 'DELETE',
@@ -111,6 +135,19 @@ deleteCurrentItem = () => {
     });
 }
 
+/**
+ * Generates card objects using DOM. Should be broken down to smaller functions.
+ * 
+ * @param {date} listDate intended date of item listing
+ * @param {string} itemName name of item
+ * @param {integer} price price of item
+ * @param {integer} quantity stock of item
+ * @param {integer} discount discount for item, ranges 0-100
+ * @param {string} itemCategory category of item 
+ * @param {string} image datauri for item image
+ * @param {boolean} image if the listing is private
+ * @param {integer} imgID id of the current image being generated
+ * */
 generateCard = (listDate, itemName, price, discount, quantity, itemCategory, image, private, imgID) => {
     let column = document.createElement("div");
     column.className = "col";
@@ -214,7 +251,9 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
 
 }
 
-
+/**
+ * When images are opened/loaded into the html form, it is converted to a data uri.
+ */
 var openFile = function (event) {
     var input = event.target;
     var reader = new FileReader();
@@ -284,8 +323,9 @@ $(document).ready(function () {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-                
-            }, body: JSON.stringify({
+
+            },
+            body: JSON.stringify({
                 item_name: document.getElementById('edit_item').value,
                 item_category: document.getElementById('edit_category').value,
                 quantity: document.getElementById('edit_quantity').value,

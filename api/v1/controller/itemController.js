@@ -11,6 +11,7 @@ addValidItem = async (req, res) => {
     }));
 }
 
+//Retrieves all public items from database.
 validPublicItems = async (req, res) => {
     itemModel.getPublicItems().then((data) => {
         res.status(200).json(data.rows);
@@ -20,6 +21,7 @@ validPublicItems = async (req, res) => {
     }));
 }
 
+//Checks if the user_id exists, if it doesn't the user is not authorized to delete items.
 validUserItems = async (req, res) => {
     let user_id = req.params.user_id;
     if (!user_id) {
@@ -34,6 +36,7 @@ validUserItems = async (req, res) => {
 
 }
 
+//Deletes every item belonging to the user.
 validDeleteAll = async (req, res) => {
     let user_id = req.params.user_id;
     if (!user_id) {
@@ -47,6 +50,7 @@ validDeleteAll = async (req, res) => {
     }
 }
 
+//Deletes a specific item belonging to the user, check userID for security, img_id is unique to items.
 validDeleteSpecific = async (req, res) => {
     let body = req.body;
     itemModel.deleteSpecificItem(body.user_id, body.img_id).then((data) => {
@@ -56,6 +60,7 @@ validDeleteSpecific = async (req, res) => {
     }));
 }
 
+//Changes the contents of a valid item. UserID is used for security again
 editValidItem = async (req, res) => {
     let body = req.body;
     itemModel.updateItem(body.user_id, body.image, body.img_id, body.quantity, body.discount, body.item_name, body.item_category, body.price, body.private).then((data) => {
