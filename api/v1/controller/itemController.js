@@ -48,9 +48,8 @@ validDeleteAll = async (req, res) => {
 }
 
 validDeleteSpecific = async (req, res) => {
-    let user_id = 1; //hard code user before implementing login
     let body = req.body;
-    itemModel.deleteSpecificItem(user_id, body.img_id).then((data) => {
+    itemModel.deleteSpecificItem(body.user_id, body.img_id).then((data) => {
         res.status(200).json('User Item Deleted from Database');
     }).catch(e => res.status(404).json({
         message: e.message
@@ -58,9 +57,8 @@ validDeleteSpecific = async (req, res) => {
 }
 
 editValidItem = async (req, res) => {
-    let user_id = 1; //hard code before implementing login
     let body = req.body;
-    itemModel.updateItem(user_id, body.image, body.img_id, body.quantity, body.discount, body.item_name, body.item_category, body.price, body.private).then((data) => {
+    itemModel.updateItem(body.user_id, body.image, body.img_id, body.quantity, body.discount, body.item_name, body.item_category, body.price, body.private).then((data) => {
         res.status(200).json('Item Edited from Database');
     }).catch(e => res.status(404).json({
         message: e.message

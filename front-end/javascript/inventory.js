@@ -1,19 +1,19 @@
 const session = localStorage.getItem("session");
 console.log(session);
-if (!session){
+if (!session) {
     console.log('invalid session');
     location.href = "./index.html";
 }
 
 
 calculateDiscount = (price, discount) => {
-    let discountedPrice = (1 - (discount/100)) * price;
+    let discountedPrice = (1 - (discount / 100)) * price;
     return discountedPrice.toFixed(2);
 }
 
-getUserItems = () =>{
+getUserItems = () => {
     user_id = localStorage.getItem('session');
-    fetch('https://shopify-challenge-db.herokuapp.com/v1/items/' +user_id, {
+    fetch('https://shopify-challenge-db.herokuapp.com/v1/items/' + user_id, {
         method: 'GET', // likewise we have DELETE, PUT, PATCH
         headers: {
             'Accept': 'application/json',
@@ -30,16 +30,16 @@ getUserItems = () =>{
             }
         })
         .then(data => {
-            for (i = 0; i< data.length; i++){
-                if(i%2 == 0){
-                    let spacing = document.createElement("div"); 
-                    spacing.className= "w-100";
+            for (i = 0; i < data.length; i++) {
+                if (i % 2 == 0) {
+                    let spacing = document.createElement("div");
+                    spacing.className = "w-100";
                     document.getElementById("inventory").appendChild(spacing);
                 }
                 let listDate = data[i].list_date.split('T')[0];
                 let img = document.createElement("img");
                 img.src = data[i].image;
-                generateCard(listDate, data[i].item_name,  data[i].price, data[i].discount, data[i].quantity, data[i].item_category, img);
+                generateCard(listDate, data[i].item_name, data[i].price, data[i].discount, data[i].quantity, data[i].item_category, img, data[i].private, data[i].img_id);
             }
         }).
     catch(e => {
@@ -47,7 +47,7 @@ getUserItems = () =>{
     });
 }
 
-generateCard = (listDate, itemName, price, discount, quantity, itemCategory, image) => {
+generateCard = (listDate, itemName, price, discount, quantity, itemCategory, image, private, imgID) => {
     let column = document.createElement("div");
     column.className = "col";
     let cardObject = document.createElement("div");
@@ -62,70 +62,108 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
     header.innerHTML = itemName;
     let category = document.createElement("p");
     let listingDate = document.createElement("p");
-    listingDate.innerHTML = "Listed: " +listDate;
+    listingDate.innerHTML = "Listed: " + listDate;
     let storeQuantity = document.createElement("p");
-    storeQuantity.innerHTML = "Quantity: " +quantity;
+    storeQuantity.innerHTML = "Quantity: " + quantity;
     let linebreak = document.createElement("h6");
     linebreak.className = "mb-3";
-    category.innerHTML= itemCategory;
+    category.innerHTML = itemCategory;
     category.className = "small text-muted text-uppercase mb-2";
     listingDate.className = "small text-muted text-uppercase mb-2";
     storeQuantity.className = "small text-muted text-uppercase mb-2";
 
     //price calculation
     let currentPrice = document.createElement("span");
-    currentPrice.className="text-success mr-1";
-    currentPrice.innerHTML= "$ "+calculateDiscount(price, discount);
+    currentPrice.className = "text-success mr-1";
+    currentPrice.innerHTML = "$ " + calculateDiscount(price, discount);
 
     let previousPrice = document.createElement("span");
-    previousPrice.className="text-danger mr-1";
-    
+    previousPrice.className = "text-danger mr-1";
 
-    let addToCart = document.createElement("button");
-    addToCart.className = "btn btn-primary btn-sm mr-1 mb-2"
-    addToCart.innerHTML = "Add to Cart";
-  
+
+    let editItem = document.createElement("button");
+    editItem.id= "editButton";
+    editItem.className = "btn btn-secondary btn-sm mr-1 mb-2"
+    editItem.innerHTML = "Edit";
+    editItem.onclick = (() => {
+        $('#editModal').modal('toggle');
+        localStorage.setItem('imgID', imgID);
+        document.getElementById("edit_item").value = itemName;
+        document.getElementById("edit_category").value = itemCategory;
+        document.getElementById("edit_quantity").value = quantity;
+        document.getElementById("edit_price").value = price;
+        document.getElementById("edit_discount").value = discount;
+        document.getElementById("output").value = image;
+        document.getElementById("edit_private").value = private;
+        document.getElementById("edit_output").src = image.src;
+    });
+
+
+
+    deleteItem = document.createElement("button");
+    deleteItem.onclick = (() => {
+        let confirmation = confirm("Delete Item?");
+        if (confirmation == true){
+            localStorage.setItem('imgID', imgID);
+        }else{
+            console.log("Cancelled");
+        }
+        
+    });
+    deleteItem.className="btn btn-secondary btn-sm mr-1 mb-2";
+    deleteItem.innerHTML='Delete';
+
     cardText.appendChild(header);
     cardText.appendChild(category);
     cardText.appendChild(listingDate);
     cardText.appendChild(storeQuantity);
     cardText.appendChild(linebreak);
-    //check to see if discount is invalid
-    if(price <= calculateDiscount(price, discount)){
-        previousPrice.className="text-gray mr-1";
-        previousPrice.innerHTML= "$ " + price+"</br>";
-        cardText.appendChild(previousPrice);
-        let saleOverlay = document.createElement('h4');
-        saleOverlay.className="mb-2";
-        let saleSpan = document.createElement('span');
-        saleSpan.className = "badge badge-success";
-        saleSpan.innerHTML="NEW";
-        saleOverlay.appendChild(saleSpan);
-        overlayDiv.appendChild(saleOverlay);
-    }
-    else{
-        previousPrice.innerHTML= "<s>$ "+price+"</s></br>";
-        cardText.appendChild(currentPrice);
-        cardText.appendChild(previousPrice);
-        let saleOverlay = document.createElement('h4');
-        saleOverlay.className="mb-2";
-        let saleSpan = document.createElement('span');
-        saleSpan.className = "badge badge-danger";
-        saleSpan.innerHTML="SALE";
-        saleOverlay.appendChild(saleSpan);
-        
-        overlayDiv.appendChild(saleOverlay);
-    }
     
-    cardText.appendChild(addToCart);
+    //check to see if discount is invalid
+    if (!private) {
+        let saleOverlay = document.createElement('h4');
+        saleOverlay.className = "mb-2";
+        let privateSpan = document.createElement('span');
+        privateSpan.className = "badge badge-success";
+        privateSpan.innerHTML = "Published";
+        saleOverlay.appendChild(privateSpan);
+        overlayDiv.appendChild(saleOverlay);
+    } else {
+        let saleOverlay = document.createElement('h4');
+        saleOverlay.className = "mb-2";
+        let privateSpan = document.createElement('span');
+        privateSpan.className = "badge badge-danger";
+        privateSpan.innerHTML = "Unpublished";
+        saleOverlay.appendChild(privateSpan);
+        overlayDiv.appendChild(saleOverlay);
+    }
+
+    cardText.appendChild(editItem);
+    cardText.appendChild(deleteItem);
     cardObject.appendChild(overlayDiv);
     overlayDiv.appendChild(img);
     cardObject.appendChild(cardText);
     column.appendChild(cardObject);
     document.getElementById("inventory").appendChild(column);
 
-    
+
 }
+
+
+var openFile = function(event) {
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function(){
+      var dataURL = reader.result;
+      var output = document.getElementById('output');
+      output.src = dataURL;
+      let editOutput = document.getElementById('edit_output');
+      editOutput.src = dataURL;
+    };
+    reader.readAsDataURL(input.files[0]);
+  };
+  
+  
 
 getUserItems();
 
@@ -134,5 +172,125 @@ $(document).ready(function () {
         localStorage.clear();
         location.href = "./index.html";
     })
-    
+
+    $("#item_submit").click(() => {
+        fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'CrossDomain': true
+            },
+            body: JSON.stringify({
+                item_name: document.getElementById('input_item').value,
+                item_category: document.getElementById('input_category').value,
+                quantity: document.getElementById('input_quantity').value,
+                price: document.getElementById('input_price').value,
+                discount: document.getElementById('input_discount').value,
+                private: document.getElementById('input_private').value,
+                user_id: localStorage.getItem('session'),
+                image: document.getElementById('edit_output').src
+            }),
+        }).
+        then(res => {
+                console.log(res.json);
+                if (res.status == 200) {
+                    console.log("Item Saved");
+                    // location.reload();
+
+                } else if (res.status == 404) {
+                    throw new Error('User not in database.');
+                } else {
+                    console.log(res.json);
+                }
+            })
+            .then(data => {
+                $('#item_submit').className = 'data-toggle="popover" title="Query Submitted" data-content="' + data + '"';
+            }).
+        catch(e => {
+            alert(e);
+        });
+    });
+
+    $("#edit_submit").click(() => {
+        // alert(document.getElementById('edit_output').src);
+        fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                item_name: document.getElementById('edit_item').value,
+                item_category: document.getElementById('edit_category').value,
+                quantity: document.getElementById('edit_quantity').value,
+                price: document.getElementById('edit_price').value,
+                discount: document.getElementById('edit_discount').value,
+                private: document.getElementById('edit_private').value,
+                user_id: localStorage.getItem('session'),
+                image: document.getElementById('edit_output').src,
+                img_id: localStorage.getItem('imgID')
+            }),
+        }).
+        then(res => {
+                console.log(res.json);
+                if (res.status == 200) {
+                    console.log("Item Saved");
+                    // location.reload();
+
+                } else if (res.status == 404) {
+                    throw new Error('User not in database.');
+                } else {
+                    console.log(res.json);
+                }
+            })
+            .then(data => {
+                $('#item_submit').className = 'data-toggle="popover" title="Edit Submitted" data-content="' + data + '"';
+            }).
+        catch(e => {
+            alert(e);
+        });
+    });
+    // $("#editItem").on("click", function(){
+    //     console.log('edit clicked');
+    //     $($(this).attr("#editModal")).modal("show");
+    //   });
 })
+
+deleteItem=()=>{
+    fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                item_name: document.getElementById('edit_item').value,
+                item_category: document.getElementById('edit_category').value,
+                quantity: document.getElementById('edit_quantity').value,
+                price: document.getElementById('edit_price').value,
+                discount: document.getElementById('edit_discount').value,
+                private: document.getElementById('edit_private').value,
+                user_id: localStorage.getItem('session'),
+                img_id: localStorage.getItem('imgID')
+            }),
+        }).
+        then(res => {
+                console.log(res.json);
+                if (res.status == 200) {
+                    console.log("Item Saved");
+                    // location.reload();
+
+                } else if (res.status == 404) {
+                    throw new Error('User not in database.');
+                } else {
+                    console.log(res.json);
+                }
+            })
+            .then(data => {
+                $('#item_submit').className = 'data-toggle="popover" title="Edit Submitted" data-content="' + data + '"';
+            }).
+        catch(e => {
+            alert(e);
+        });
+    }
