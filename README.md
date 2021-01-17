@@ -140,10 +140,18 @@ The website is an image repository, I made it into a shop to work on the sell/bu
 ### Home / Marketboard
 
 The home page serves as a marketplace for all of the users. Rather than serve just one owner, I made it so that any images listed as not private can be published and sold on the home page. Like a flea market!
-
+[![MarketBoard](https://i.gyazo.com/8d34f1f50eca4a2285b7c03515644ee5.gif)](https://gyazo.com/8d34f1f50eca4a2285b7c03515644ee5)
 ### Manage Inventory
 
 Users can log into the manage inventory page in order to list new items/delete their items/edit items/make their private listings public
+
+[![Login](https://i.gyazo.com/2d185354a3491f017f3e7d971af8666d.gif)](https://gyazo.com/2d185354a3491f017f3e7d971af8666d)
+
+[![Create](https://i.gyazo.com/c28d2842ba6f289789cacc7834f1f354.png)](https://gyazo.com/c28d2842ba6f289789cacc7834f1f354)
+
+[![Unpublish](https://i.gyazo.com/f0ce8c6b5d64c46f1621873d70a50f9d.gif)](https://gyazo.com/f0ce8c6b5d64c46f1621873d70a50f9d)
+
+[![Unpublished](https://i.gyazo.com/577500ac2be268fe8271704e99e4d6f0.png)](https://gyazo.com/577500ac2be268fe8271704e99e4d6f0)
 ---
 
 ## Contact Me
