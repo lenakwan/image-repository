@@ -12,6 +12,7 @@ displayCart = () => {
     console.log(shoppingCart.length);
     cartItems = document.getElementById("cartItems");
     cartItems.innerHTML = shoppingCart.length;
+    localStorage.setItem("cart", shoppingCart);
 }
 
 calculateDiscount = (price, discount) => {
@@ -97,7 +98,8 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
             "price": price,
             "discount": discount,
             "quantity": quantity,
-            "itemCateogry": image
+            "itemCategory": category,
+            "image": image.src
         };
         shoppingCart.push(detail);
         displayCart();
@@ -139,43 +141,100 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
     document.getElementById("inventory").appendChild(column);
 }
 
+calculateCartTotal= () =>{
+    let object = {};
+    let price = 0;
+    for(i =0; i< shoppingCart.length;i++){
+        let discounted =calculateDiscount(shoppingCart[i].price, shoppingCart[i].discount);
+        if (discounted >= shoppingCart[i].price){
+            price += parseFloat(shoppingCart[i].price);
+        }else{
+            price += parseFloat(discounted);
+        }
+    }
+    return price;
+}
 getDbItems();
 // document.getElementById("manageInventory").onclick = (event)=>{
 //     alert("clicked button");
 //     event.preventDefault();
 // }
 $(document).ready(function () {
-    $("#login_submit").click(() => {
-        fetch('https://shopify-challenge-db.herokuapp.com/v1/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: document.getElementById('userName').value,
-                password: document.getElementById('userPassword').value
-            }),
-        }).
-        then(res => {
-                console.log(res.json);
-                if (res.status == 200) {
-                    console.log("Login Success");
-                    return res.json();
+            $("#login_submit").click(() => {
+                fetch('https://shopify-challenge-db.herokuapp.com/v1/login', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: document.getElementById('userName').value,
+                        password: document.getElementById('userPassword').value
+                    }),
+                }).
+                then(res => {
+                        console.log(res.json);
+                        if (res.status == 200) {
+                            console.log("Login Success");
+                            return res.json();
 
-                } else if (res.status == 404) {
-                    throw new Error('Invalid Login.');
-                } else {
-                    console.log(res.json);
+                        } else if (res.status == 404) {
+                            throw new Error('Invalid Login.');
+                        } else {
+                            console.log(res.json);
+                        }
+                    })
+                    .then(data => {
+                        localStorage.setItem('session', data[0].user_id);
+                        location.href = "./inventory.html";
+                    }).
+                catch(e => {
+                    alert(e);
+                });
+            });
+
+            $("#checkOut").click(() => {
+                let cartDiv= document.getElementById("cartContent");
+                
+                for(i =0; i< shoppingCart.length;i++){
+                    console.log([shoppingCart[i]]);
+                    cartDiv.appendChild(document.createElement("tr"));
+                    let imageTD = document.createElement("td");
+                    imageTD.className="w-25";
+                    let cart_img = document.createElement("IMG");
+                    cart_img.src = shoppingCart[i].image;
+                    cart_img.className = "img-fluid";
+                    imageTD.appendChild(cart_img);
+                    let nameTd = document.createElement("td");
+                    nameTd.innerHTML = shoppingCart[i].itemName;
+                    let priceTd = document.createElement("td");
+                    priceTd.innerHTML = calculateDiscount(shoppingCart[i].price, shoppingCart[i].discount);
+                    let qtyTd = document.createElement("td");
+                    let input = document.createElement("select");
+                   
+                    let quantity = shoppingCart[i].quantity;
+                    for (ii=1; ii <= quantity; ii++){
+                        let option = document.createElement("option");
+                        option.innerHTML = ii;
+                        input.appendChild(option);
+                    }
+                    qtyTd.appendChild(input);
+                    let categoryTd = document.createElement("td");
+                    categoryTd.innerHTML = shoppingCart[i].itemCategory.innerHTML;
+
+                    cartDiv.appendChild(imageTD);
+                    cartDiv.appendChild(nameTd);
+                    cartDiv.appendChild(categoryTd);
+                    cartDiv.appendChild(priceTd);
+                    cartDiv.appendChild(qtyTd);
+
                 }
+                let total = calculateCartTotal();
+                console.log(total);
+                document.getElementById("cartTotal").innerHTML = total;
+                $('#checkoutModal').modal('toggle');
+                
+                })
+                
+              
             })
-            .then(data => {
-                localStorage.setItem('session', data[0].user_id);
-                location.href = "./inventory.html";
-            }).
-        catch(e => {
-            alert(e);
-        });
-    });
-
-})

@@ -1,5 +1,4 @@
 const session = localStorage.getItem("session");
-console.log(session);
 if (!session) {
     console.log('invalid session');
     location.href = "./index.html";
@@ -47,6 +46,71 @@ getUserItems = () => {
     });
 }
 
+deleteItem = () => {
+    fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: localStorage.getItem('session'),
+            img_id: localStorage.getItem('imgID')
+        }),
+    }).
+    then(res => {
+            console.log(res.json);
+            if (res.status == 200) {
+                console.log("Item Saved");
+                // location.reload();
+
+            } else if (res.status == 404) {
+                throw new Error('User not in database.');
+            } else {
+                console.log(res.json);
+            }
+        })
+        .then(data => {
+            $('#item_submit').className = 'data-toggle="popover" title="Edit Submitted" data-content="' + data + '"';
+        }).
+    catch(e => {
+        alert(e);
+    });
+}
+
+
+deleteCurrentItem = () => {
+    fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: localStorage.getItem('session'),
+            img_id: localStorage.getItem('imgID')
+        }),
+    }).
+    then(res => {
+            console.log(res.json);
+            if (res.status == 200) {
+                console.log("Item Saved");
+                location.reload();
+
+            } else if (res.status == 404) {
+                throw new Error('Login again.');
+            } else {
+                console.log(res.json);
+            }
+        })
+        .then(data => {
+            $('#item_submit').className = 'data-toggle="popover" title="Edit Submitted" data-content="' + data + '"';
+        }).
+    catch(e => {
+        alert(e);
+    });
+}
+
 generateCard = (listDate, itemName, price, discount, quantity, itemCategory, image, private, imgID) => {
     let column = document.createElement("div");
     column.className = "col";
@@ -82,7 +146,7 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
 
 
     let editItem = document.createElement("button");
-    editItem.id= "editButton";
+    editItem.id = "editButton";
     editItem.className = "btn btn-secondary btn-sm mr-1 mb-2"
     editItem.innerHTML = "Edit";
     editItem.onclick = (() => {
@@ -103,22 +167,23 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
     deleteItem = document.createElement("button");
     deleteItem.onclick = (() => {
         let confirmation = confirm("Delete Item?");
-        if (confirmation == true){
+        if (confirmation == true) {
             localStorage.setItem('imgID', imgID);
-        }else{
+            deleteCurrentItem();
+        } else {
             console.log("Cancelled");
         }
-        
+
     });
-    deleteItem.className="btn btn-secondary btn-sm mr-1 mb-2";
-    deleteItem.innerHTML='Delete';
+    deleteItem.className = "btn btn-secondary btn-sm mr-1 mb-2";
+    deleteItem.innerHTML = 'Delete';
 
     cardText.appendChild(header);
     cardText.appendChild(category);
     cardText.appendChild(listingDate);
     cardText.appendChild(storeQuantity);
     cardText.appendChild(linebreak);
-    
+
     //check to see if discount is invalid
     if (!private) {
         let saleOverlay = document.createElement('h4');
@@ -150,20 +215,20 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
 }
 
 
-var openFile = function(event) {
+var openFile = function (event) {
     var input = event.target;
     var reader = new FileReader();
-    reader.onload = function(){
-      var dataURL = reader.result;
-      var output = document.getElementById('output');
-      output.src = dataURL;
-      let editOutput = document.getElementById('edit_output');
-      editOutput.src = dataURL;
+    reader.onload = function () {
+        var dataURL = reader.result;
+        var output = document.getElementById('output');
+        output.src = dataURL;
+        let editOutput = document.getElementById('edit_output');
+        editOutput.src = dataURL;
     };
     reader.readAsDataURL(input.files[0]);
-  };
-  
-  
+};
+
+
 
 getUserItems();
 
@@ -195,8 +260,8 @@ $(document).ready(function () {
         then(res => {
                 console.log(res.json);
                 if (res.status == 200) {
-                    console.log("Item Saved");
-                    // location.reload();
+                    console.log("Item Deleted");
+                    location.reload();
 
                 } else if (res.status == 404) {
                     throw new Error('User not in database.');
@@ -219,8 +284,8 @@ $(document).ready(function () {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+                
+            }, body: JSON.stringify({
                 item_name: document.getElementById('edit_item').value,
                 item_category: document.getElementById('edit_category').value,
                 quantity: document.getElementById('edit_quantity').value,
@@ -235,11 +300,11 @@ $(document).ready(function () {
         then(res => {
                 console.log(res.json);
                 if (res.status == 200) {
-                    console.log("Item Saved");
-                    // location.reload();
+                    console.log("Your items have been cleared");
+                    location.reload();
 
                 } else if (res.status == 404) {
-                    throw new Error('User not in database.');
+                    throw new Error('Unauthorized');
                 } else {
                     console.log(res.json);
                 }
@@ -255,42 +320,37 @@ $(document).ready(function () {
     //     console.log('edit clicked');
     //     $($(this).attr("#editModal")).modal("show");
     //   });
-})
-
-deleteItem=()=>{
-    fetch('https://shopify-challenge-db.herokuapp.com/v1/items', {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                item_name: document.getElementById('edit_item').value,
-                item_category: document.getElementById('edit_category').value,
-                quantity: document.getElementById('edit_quantity').value,
-                price: document.getElementById('edit_price').value,
-                discount: document.getElementById('edit_discount').value,
-                private: document.getElementById('edit_private').value,
-                user_id: localStorage.getItem('session'),
-                img_id: localStorage.getItem('imgID')
-            }),
-        }).
-        then(res => {
-                console.log(res.json);
-                if (res.status == 200) {
-                    console.log("Item Saved");
-                    // location.reload();
-
-                } else if (res.status == 404) {
-                    throw new Error('User not in database.');
-                } else {
-                    console.log(res.json);
-                }
-            })
-            .then(data => {
-                $('#item_submit').className = 'data-toggle="popover" title="Edit Submitted" data-content="' + data + '"';
+    $("#deleteAll").click(() => {
+        let userConfirmation = confirm("This will delete all of your listings, are you sure?");
+        if (!userConfirmation) {
+            console.log("Delete cancelled");
+        } else {
+            fetch('https://shopify-challenge-db.herokuapp.com/v1/items/' + localStorage.getItem("session"), {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
             }).
-        catch(e => {
-            alert(e);
-        });
-    }
+            then(res => {
+                    console.log(res.json);
+                    if (res.status == 200) {
+                        console.log("Item Saved");
+                        location.reload();
+
+                    } else if (res.status == 404) {
+                        throw new Error('User not in database.');
+                    } else {
+                        console.log(res.json);
+                    }
+                })
+                .then(data => {
+                    $('#item_submit').className = 'data-toggle="popover" title="Edit Submitted" data-content="' + data + '"';
+                }).
+            catch(e => {
+                alert(e);
+            });
+        }
+    });
+
+})
