@@ -20,7 +20,7 @@ registerUser = async (req, res) => {
 loginUser = async (req, res) => {
     let body = req.body;
     userModel.authUser(body.username, body.password).then((users)=>{
-        if(users.data==1){
+        if(users.rowCount==1){
             res.status(200).json(users.data);
         }
         else{
