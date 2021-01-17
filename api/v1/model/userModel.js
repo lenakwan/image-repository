@@ -1,7 +1,7 @@
 const db = require('../database');
 
 authUser = async (username, password) => {
-    return await db.pool.query(`Select * from users where user_name='${username}' and password='${password}'`);
+    return await db.pool.query(`Select * from users where user_name='${username}' and user_pw='${password}'`);
 }
 findUser = async (username) => {
     return db.pool.query("Select user_id from users where user_name ='" + username + "'");
