@@ -144,13 +144,16 @@ The home page serves as a marketplace for all of the users. Rather than serve ju
 ### Manage Inventory
 
 Users can log into the manage inventory page in order to list new items/delete their items/edit items/make their private listings public
-
+Login Example:
 [![Login](https://i.gyazo.com/2d185354a3491f017f3e7d971af8666d.gif)](https://gyazo.com/2d185354a3491f017f3e7d971af8666d)
 
+Create Item Example:
 [![Create](https://i.gyazo.com/c28d2842ba6f289789cacc7834f1f354.png)](https://gyazo.com/c28d2842ba6f289789cacc7834f1f354)
 
+Unpublish/Edit Item Example:
 [![Unpublish](https://i.gyazo.com/f0ce8c6b5d64c46f1621873d70a50f9d.gif)](https://gyazo.com/f0ce8c6b5d64c46f1621873d70a50f9d)
 
+Unpublished Item Example:
 [![Unpublished](https://i.gyazo.com/577500ac2be268fe8271704e99e4d6f0.png)](https://gyazo.com/577500ac2be268fe8271704e99e4d6f0)
 ---
 
