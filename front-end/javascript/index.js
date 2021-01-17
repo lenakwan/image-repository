@@ -1,12 +1,18 @@
-dbItem = (itemName, itemPrice, itemDiscount, itemCategory, itemDate, image) => {
-    this.itemName = itemName;
-    this.itemPrice = itemPrice;
-    this.discountedPrice = calculateDiscount(itemPrice, itemDiscount);
-    this.listDate = itemDate;
-    this.itemCategory = itemCategory;
-    this.image = image;
-}
+// dbItem = (itemName, itemPrice, itemDiscount, itemCategory, itemDate, image) => {
+//     this.itemName = itemName;
+//     this.itemPrice = itemPrice;
+//     this.discountedPrice = calculateDiscount(itemPrice, itemDiscount);
+//     this.listDate = itemDate;
+//     this.itemCategory = itemCategory;
+//     this.image = image;
+// }
+var shoppingCart = [];
 
+displayCart = () => {
+    console.log(shoppingCart.length);
+    cartItems = document.getElementById("cartItems");
+    cartItems.innerHTML = shoppingCart.length;
+}
 
 calculateDiscount = (price, discount) => {
     let discountedPrice = (1 - (discount / 100)) * price;
@@ -81,10 +87,21 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
     let previousPrice = document.createElement("span");
     previousPrice.className = "text-danger mr-1";
 
-
     let addToCart = document.createElement("button");
     addToCart.className = "btn btn-primary btn-sm mr-1 mb-2"
     addToCart.innerHTML = "Add to Cart";
+    addToCart.onclick = (() => {
+        detail = {
+            "listDate": listDate,
+            "itemName": itemName,
+            "price": price,
+            "discount": discount,
+            "quantity": quantity,
+            "itemCateogry": image
+        };
+        shoppingCart.push(detail);
+        displayCart();
+    });
     cardText.appendChild(header);
     cardText.appendChild(category);
     cardText.appendChild(listingDate);
@@ -112,22 +129,17 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
         saleSpan.className = "badge badge-danger";
         saleSpan.innerHTML = "SALE";
         saleOverlay.appendChild(saleSpan);
-
         overlayDiv.appendChild(saleOverlay);
     }
-
     cardText.appendChild(addToCart);
     cardObject.appendChild(overlayDiv);
     overlayDiv.appendChild(img);
     cardObject.appendChild(cardText);
     column.appendChild(cardObject);
     document.getElementById("inventory").appendChild(column);
-
-
 }
 
 getDbItems();
-
 // document.getElementById("manageInventory").onclick = (event)=>{
 //     alert("clicked button");
 //     event.preventDefault();
@@ -138,12 +150,12 @@ $(document).ready(function () {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                body: JSON.stringify({
-                    username: document.getElementById('username').value,
-                    password:  document.getElementById('password').value
-                })
+                'Content-Type': 'application/json'
             },
+            body: JSON.stringify({
+                username: document.getElementById('userName').value,
+                password: document.getElementById('userPassword').value
+            }),
         }).
         then(res => {
                 console.log(res.json);
@@ -151,18 +163,19 @@ $(document).ready(function () {
                     console.log("Login Success");
                     return res.json();
 
-                } else if (res.status == 401) {
+                } else if (res.status == 404) {
                     throw new Error('Invalid Login.');
                 } else {
                     console.log(res.json);
                 }
             })
             .then(data => {
-                localStorage.setItem('user_id', data.user_id);
-                console.log(data);
+                localStorage.setItem('session', data[0].user_id);
+                location.href = "./inventory.html";
             }).
         catch(e => {
-            console.log(e);
+            alert(e);
         });
-    })
+    });
+
 })

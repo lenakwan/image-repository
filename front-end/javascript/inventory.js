@@ -1,17 +1,8 @@
-const session = localStorage.getItem("user");
+const session = localStorage.getItem("session");
 console.log(session);
 if (!session){
     console.log('invalid session');
     location.href = "./index.html";
-}
-
-dbItem = (itemName, itemPrice, itemDiscount, itemCategory, itemDate, image) => {
-    this.itemName = itemName;
-    this.itemPrice = itemPrice;
-    this.discountedPrice = calculateDiscount(itemPrice, itemDiscount);
-    this.listDate = itemDate;
-    this.itemCategory = itemCategory;
-    this.image = image;
 }
 
 
@@ -20,8 +11,9 @@ calculateDiscount = (price, discount) => {
     return discountedPrice.toFixed(2);
 }
 
-getDbItems = () =>{
-    fetch('https://shopify-challenge-db.herokuapp.com/v1/items/', {
+getUserItems = () =>{
+    user_id = localStorage.getItem('session');
+    fetch('https://shopify-challenge-db.herokuapp.com/v1/items/' +user_id, {
         method: 'GET', // likewise we have DELETE, PUT, PATCH
         headers: {
             'Accept': 'application/json',
@@ -92,6 +84,7 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
     let addToCart = document.createElement("button");
     addToCart.className = "btn btn-primary btn-sm mr-1 mb-2"
     addToCart.innerHTML = "Add to Cart";
+  
     cardText.appendChild(header);
     cardText.appendChild(category);
     cardText.appendChild(listingDate);
@@ -134,4 +127,12 @@ generateCard = (listDate, itemName, price, discount, quantity, itemCategory, ima
     
 }
 
-getDbItems();
+getUserItems();
+
+$(document).ready(function () {
+    $("#home").click(() => {
+        localStorage.clear();
+        location.href = "./index.html";
+    })
+    
+})
