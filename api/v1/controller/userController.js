@@ -21,7 +21,7 @@ loginUser = async (req, res) => {
     let body = req.body;
     userModel.authUser(body.username, body.password).then((users)=>{
         if(users.rowCount==1){
-            res.status(200).json(users.data);
+            res.status(200).json(users.rows);
         }
         else{
             res.status(404).json('Not Found.')
