@@ -19,11 +19,18 @@ registerUser = async (req, res) => {
 
 loginUser = async (req, res) => {
     let body = req.body;
-    userModel.authUser(body.username, body.password).catch(e => res.status(500).json({
-        message: 'login failed' + e.message
+    userModel.authUser(body.username, body.password).then((users)=>{
+        if(users.data==1){
+            res.status(200).json(users.data);
+        }
+        else{
+            res.status(404).json('Not Found.')
+        }
+    }).catch(e => res.status(500).json({
+        message: 'Internal Server Error' + e.message
     }));
-    res.status(200).json('Login Success!')
 }
+
 module.exports = {
     registerUser: registerUser,
     loginUser: loginUser

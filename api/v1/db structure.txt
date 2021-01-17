@@ -2,6 +2,7 @@ quick notes on what I want to do for the database
 
 1. assumption is that this is a store
 2. assumption that users have to logon to access store
+3. authentication with jwttoken?
 
 need
 User Object
@@ -22,7 +23,7 @@ item
 -userID
 -imgid
 -list_date - date
--image <- convert images to DATA URI and then store the image. 
+-image <- convert images to DATA URI and then store the image. Alternative to use Cloudinary and follow tutorial
 
 CREATE TABLE users(
     user_name varchar(40) NOT NULL,
@@ -32,7 +33,7 @@ CREATE TABLE users(
 );
 CREATE TABLE items (
     item_name varchar(40) NOT NULL,
-    image TEXT NOT NULL,
+    image TEXT NOT NULL, 
     item_category varchar(40) NOT NULL,
     list_date date NOT NULL,
     quantity INT,
