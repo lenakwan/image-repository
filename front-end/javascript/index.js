@@ -274,5 +274,9 @@ $(document).ready(function () {
 
     })
 
+    $("#submitCart").click(() => {
+        console.log("submit");
+        location.href="./thankyou.html";
+    })
 
 })
